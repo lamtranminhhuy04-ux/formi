@@ -1,0 +1,25 @@
+/* Local Latin + Vietnamese fonts. Licenses and provenance: assets/fonts/README.md.
+   Universe Serif is the renamed Lora subset; its reserved upstream name is respected. */
+@font-face {
+  font-family: "Noto Sans";
+  src: url("../assets/fonts/noto-sans-latin-vietnamese.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Universe Serif";
+  src: url("../assets/fonts/universe-serif-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Universe Serif";
+  src: url("../assets/fonts/universe-serif-italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}

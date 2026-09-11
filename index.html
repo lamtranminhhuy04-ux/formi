@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFF7FA">
+  <meta name="description" content="Một cuốn scrapbook nhỏ, dành cho những kỷ niệm lớn của chúng mình.">
+  <title>Our Little Universe</title>
+  <link rel="icon" href="assets/icons/star.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/noto-sans-latin-vietnamese.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/universe-serif-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/data.js"></script>
+  <script defer src="js/countdown.js"></script>
+  <script defer src="js/gallery.js"></script>
+  <script defer src="js/quiz.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#together">Đi đến nội dung</a>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Our Little Universe — đầu trang"><span aria-hidden="true">✳</span> our little universe<span class="brand-dot">.</span></a>
+    <nav aria-label="Điều hướng chính"><a href="#story">Chuyện chúng mình</a><a href="#album">Album</a><a href="#letters">Thư cho em</a></nav>
+    <button class="music" id="music" type="button" aria-pressed="false" disabled>♫ <span>Chưa có nhạc</span></button>
+  </header>
+  <main>
+    <section class="hero wrap" id="home" aria-labelledby="hero-title">
+      <div class="hero-copy"><p class="eyebrow"><span class="tiny-star">✦</span> MỘT GÓC NHỎ, CHỈ CỦA CHÚNG MÌNH</p><h1 id="hero-title">Our Little<br><em>Universe</em><span class="title-star" aria-hidden="true">✧</span></h1><p class="hero-intro" id="intro"></p><p class="couple" id="couple"></p><a class="button primary" id="start" href="#together">Bắt đầu hành trình <span aria-hidden="true">↗</span></a><p class="hero-footnote">Một chút kỷ niệm. Một chút yêu thương. Rất nhiều chúng mình.</p></div>
+      <div class="hero-art"><span class="orbit-note">you, me & all the little things</span><div class="back-paper" aria-hidden="true"></div><figure class="hero-polaroid"><span class="tape" aria-hidden="true"></span><img id="hero-image" src="assets/images/hero-placeholder.svg" alt="Minh họa hai người ngắm hoàng hôn bên biển" width="720" height="800"><figcaption id="hero-caption"></figcaption></figure><span class="postmark" aria-hidden="true">WITH LOVE<br>♡<br>ALWAYS</span><span class="art-star" aria-hidden="true">✳</span><p class="photo-note">Nơi bình yên nhất<br>là bên cạnh em.</p></div>
+      <a class="scroll-note" href="#together">LẬT TRANG ĐẦU TIÊN <span aria-hidden="true">↓</span></a>
+    </section>
+    <section class="together" id="together" aria-labelledby="together-title"><div class="wrap counter-layout"><div><p class="eyebrow">TỪ MỘT NGÀY RẤT ĐẶC BIỆT</p><h2 id="together-title">Và thế là, chúng mình đã có…</h2><p id="start-date"></p></div><div class="together-number"><strong id="days-together">0</strong><span>ngày bên nhau <span aria-hidden="true">♡</span></span><small id="together-detail"></small></div></div></section>
+    <section class="section wrap reason" aria-labelledby="reason-title"><div class="section-side"><p class="eyebrow">LỜI MỞ ĐẦU</p><h2 id="reason-title">Có những điều,<br>anh muốn giữ lại.</h2><span class="handwritten">for you, with love ↗</span></div><article class="note-paper"><span class="tape" aria-hidden="true"></span><p class="eyebrow">MỘT TRANG NHẬT KÝ</p><h3>Vì sao anh tạo nên nơi này?</h3><div id="reason-copy" class="prose"></div><p class="signature" id="signature"></p></article></section>
+    <section class="section wrap" id="story" aria-labelledby="story-title"><div class="section-heading"><p class="eyebrow">01 / NHỮNG DẤU MỐC</p><h2 id="story-title">Chuyện chúng mình</h2><p>Từng khoảnh khắc nhỏ, viết nên một câu chuyện thật dài.</p></div><div class="timeline" id="timeline"></div></section>
+    <section class="section map-section" id="places" aria-labelledby="map-title"><div class="wrap"><div class="section-heading"><p class="eyebrow">02 / ĐI ĐÂU CŨNG ĐƯỢC, MIỄN LÀ CÙNG NHAU</p><h2 id="map-title">Những nơi đã có chúng mình</h2><p>Chạm vào một dấu ghim, mở lại một ngày đáng nhớ.</p></div><div class="memory-map" id="memory-map"><img id="map-image" src="assets/images/map-placeholder.svg" alt="Bản đồ minh họa các miền ký ức, không theo tỷ lệ địa lý" width="1000" height="540"></div><div class="map-legend" id="map-legend"></div><p class="map-caption">Một bản đồ không đo bằng cây số, mà bằng kỷ niệm.</p></div></section>
+    <section class="section wrap" id="album" aria-labelledby="album-title"><div class="section-heading"><p class="eyebrow">03 / NHẶT NHẠNH HẠNH PHÚC</p><h2 id="album-title">Những ngày muốn lưu mãi</h2><p>Không cần hoàn hảo. Chỉ cần là chúng mình.</p></div><div class="gallery" id="gallery"></div></section>
+    <section class="section love-section" aria-labelledby="love-title"><div class="wrap"><div class="section-heading"><p class="eyebrow">04 / NHỮNG ĐIỀU RẤT EM</p><h2 id="love-title">Anh yêu cả những điều bé xíu</h2><p>Và đây mới chỉ là một vài điều thôi…</p></div><div class="love-grid" id="love-cards"></div></div></section>
+    <section class="section wrap quiz-section" id="quiz" aria-labelledby="quiz-title"><div class="section-side"><p class="eyebrow">05 / MỘT TRÒ CHƠI NHO NHỎ</p><h2 id="quiz-title">Em còn nhớ<br>không nhỉ?</h2><p>5 câu hỏi, một chuyến trở về ký ức.<br>Không cần đúng hết, chỉ cần cùng nhớ lại.</p><span class="handwritten">Có một chiếc chìa khóa đang chờ ♡</span></div><div class="quiz-card" id="quiz-card"></div></section>
+    <section class="section wrap" id="letters" aria-labelledby="letters-title"><div class="section-heading"><p class="eyebrow">06 / ĐỂ ANH Ở ĐÂY CÙNG EM</p><h2 id="letters-title">Open when…</h2><p>Một lá thư nhỏ, cho những ngày em cần một cái ôm.</p></div><div class="letters-grid" id="letters-grid"></div></section>
+    <section class="section final-section" aria-labelledby="final-title"><div class="wrap narrow"><p class="eyebrow">07 / CÓ MỘT ĐIỀU ANH CHƯA NÓI</p><h2 id="final-title">Gửi người anh thương.</h2><p>Không phải lời kết. Là lời hứa cho những trang tiếp theo.</p><button class="envelope big-envelope" id="final-envelope" type="button" aria-expanded="false" aria-controls="final-letter"><span class="envelope-flap" aria-hidden="true"></span><span class="wax" aria-hidden="true">♡</span><span class="envelope-label">Một lá thư dành riêng cho em</span><small>Chạm để mở</small></button><article class="final-letter note-paper prose" id="final-letter" hidden tabindex="-1"></article></div></section>
+    <section class="section wrap gift-section" id="gift" aria-labelledby="gift-title"><p class="eyebrow">08 / ĐIỀU ĐẸP ĐẼ VẪN Ở PHÍA TRƯỚC</p><h2 id="gift-title">Hẹn em vào một ngày đặc biệt</h2><p id="countdown-caption"></p><div class="countdown" id="countdown" aria-label="Thời gian chờ đến ngày đặc biệt"></div><p id="countdown-status" role="status"></p><div class="gift-card"><span class="gift-icon" aria-hidden="true">✧</span><h3>Một bất ngờ nho nhỏ</h3><p id="gift-status" role="status"></p><button class="button primary" id="gift-open" type="button" disabled>Mở món quà <span aria-hidden="true">↗</span></button><div id="gift-content" class="prose" hidden></div></div></section>
+  </main>
+  <footer class="site-footer"><span aria-hidden="true">✳</span><p>Những điều nhỏ bé. Một tình yêu thật lớn.</p><p id="footer-names"></p><a href="#home">Về trang đầu ↑</a><small>Một cuốn scrapbook mẫu — hãy viết câu chuyện của riêng bạn.</small></footer>
+  <dialog id="memory-dialog" aria-labelledby="dialog-title"><div class="dialog-panel"><button class="dialog-close" type="button" aria-label="Đóng">×</button><div id="dialog-content"></div><div id="lightbox-controls" class="lightbox-controls" hidden><button type="button" id="photo-prev" aria-label="Ảnh trước">←</button><span id="photo-position" aria-live="polite"></span><button type="button" id="photo-next" aria-label="Ảnh sau">→</button></div></div></dialog>
+  <p class="sr-only" id="music-status" role="status"></p>
+  <noscript><p class="noscript">Hãy bật JavaScript để khám phá ảnh, thư và trò chơi trong cuốn scrapbook này.</p></noscript>
+</body>
+</html>
