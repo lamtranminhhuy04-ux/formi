@@ -141,13 +141,36 @@
   });
   const music=$("music");
   if(data.audioSrc){
-    const audio=new Audio();audio.preload="none";audio.loop=true;audio.volume=.35;audio.src=data.audioSrc;
+    const audio=new Audio();audio.preload="auto";audio.loop=true;audio.volume=.35;audio.src=data.audioSrc;
     let audioFailed=false;
-    music.disabled=false;music.querySelector("span").textContent="Bật nhạc";
-    const update=playing=>{music.setAttribute("aria-pressed",String(playing&&!audioFailed));music.querySelector("span").textContent=audioFailed?"Nhạc chưa khả dụng":playing?"Tắt nhạc":"Bật nhạc";};
-    audio.addEventListener("error",()=>{audioFailed=true;update(false);music.disabled=true;$("music-status").textContent="Không tải được nhạc. Em vẫn có thể tiếp tục khám phá.";});
-    audio.addEventListener("pause",()=>update(false));audio.addEventListener("play",()=>update(true));
-    music.addEventListener("click",async()=>{if(audio.paused){try{await audio.play();}catch{update(false);if(!audioFailed)$("music-status").textContent="Chưa phát được nhạc. Hãy thử lại hoặc kiểm tra tệp âm thanh.";}}else audio.pause();});
+    const musicButtons=[music,$("lock-music")].filter(Boolean);
+    musicButtons.forEach(button=>{button.disabled=false;button.querySelector("span").textContent="Bật nhạc";});
+    const update=playing=>musicButtons.forEach(button=>{button.setAttribute("aria-pressed",String(playing&&!audioFailed));button.querySelector("span").textContent=audioFailed?"Nhạc chưa khả dụng":playing?"Tắt nhạc":"Bật nhạc";});
+    let autoStart=true;
+    function stopAutoStart(){
+      autoStart=false;
+      document.removeEventListener("click",tryAutoStart);
+      document.removeEventListener("keydown",tryAutoStart);
+      document.removeEventListener("touchend",tryAutoStart);
+    }
+    async function playMusic(manual=false){
+      try{await audio.play();}
+      catch{if(manual&&!audioFailed)$("music-status").textContent="Chưa phát được nhạc. Hãy thử lại hoặc kiểm tra tệp âm thanh.";}
+    }
+    function tryAutoStart(event){
+      // Let the music controls handle their own click/keyboard actions.
+      if(!autoStart||audioFailed||musicButtons.some(button=>button.contains(event.target)))return;
+      if(event.type==="keydown"&&(event.ctrlKey||event.metaKey||event.altKey||event.key==="Escape"))return;
+      void playMusic();
+    }
+    audio.addEventListener("error",()=>{audioFailed=true;stopAutoStart();update(false);musicButtons.forEach(button=>{button.disabled=true;});$("music-status").textContent="Không tải được nhạc. Em vẫn có thể tiếp tục khám phá.";});
+    audio.addEventListener("pause",()=>update(false));
+    audio.addEventListener("play",()=>{stopAutoStart();update(true);$("music-status").textContent="";});
+    musicButtons.forEach(button=>button.addEventListener("click",()=>{stopAutoStart();if(audio.paused)void playMusic(true);else audio.pause();}));
+    document.addEventListener("click",tryAutoStart);
+    document.addEventListener("keydown",tryAutoStart);
+    document.addEventListener("touchend",tryAutoStart,{passive:true});
+    void playMusic();
   }else music.title="Thêm đường dẫn audioSrc trong js/data.js để bật nhạc nền.";
   $("start").addEventListener("click",()=>{$("together").setAttribute("tabindex","-1");$("together").focus({preventScroll:true});});
   if("IntersectionObserver" in window&&!reducedMotion.matches){
