@@ -17,8 +17,26 @@
   <script defer src="js/gallery.js"></script>
   <script defer src="js/quiz.js"></script>
   <script defer src="js/app.js"></script>
+  <script defer src="js/love-lock.js"></script>
 </head>
 <body>
+  <section class="love-lock" id="love-lock" aria-labelledby="lock-title">
+    <div class="lock-card">
+      <span class="lock-heart" aria-hidden="true">♡</span>
+      <p class="eyebrow">MỘT BÍ MẬT NHỎ CỦA CHÚNG MÌNH</p>
+      <h1 id="lock-title">Chạm vào ký ức,<br><em>mở cửa yêu thương.</em></h1>
+      <form id="lock-form" novalidate autocomplete="off">
+        <label for="lock-date">Ngày đầu tiên chúng mình nhắn tin với nhau là ngày nào?</label>
+        <p class="lock-hint" id="lock-hint">Điền ngày / tháng / năm để mở chiếc hộp kỷ niệm nhé.</p>
+        <input id="lock-date" name="memory-date" type="text" inputmode="numeric" placeholder="xx/xx/xxxx" maxlength="10" aria-describedby="lock-hint lock-error" required spellcheck="false">
+        <p class="lock-error" id="lock-error" role="alert"></p>
+        <button class="button primary" type="submit">Mở cửa chúng mình <span aria-hidden="true">↗</span></button>
+      </form>
+      <p class="lock-footnote">Một ngày bình thường, bắt đầu một điều đặc biệt.</p>
+      <noscript><p>Em hãy bật JavaScript để nhập mật mã và mở trang nhé.</p></noscript>
+    </div>
+  </section>
+  <div id="site-content" hidden inert>
   <a class="skip-link" href="#together">Đi đến nội dung</a>
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Our Little Universe — đầu trang"><span aria-hidden="true">✳</span> our little universe<span class="brand-dot">.</span></a>
@@ -46,5 +64,6 @@
   <dialog id="memory-dialog" aria-labelledby="dialog-title"><div class="dialog-panel"><button class="dialog-close" type="button" aria-label="Đóng">×</button><div id="dialog-content"></div><div id="lightbox-controls" class="lightbox-controls" hidden><button type="button" id="photo-prev" aria-label="Ảnh trước">←</button><span id="photo-position" aria-live="polite"></span><button type="button" id="photo-next" aria-label="Ảnh sau">→</button></div></div></dialog>
   <p class="sr-only" id="music-status" role="status"></p>
   <noscript><p class="noscript">Hãy bật JavaScript để khám phá ảnh, thư và trò chơi trong cuốn scrapbook này.</p></noscript>
+  </div>
 </body>
 </html>

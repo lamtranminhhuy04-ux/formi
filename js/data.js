@@ -269,7 +269,7 @@ window.UNIVERSE_DATA = {
     invitation:
       "Xin phép được mời bxa đến buổi hẹn nho nhỏ của tụi mình vào ngày Valentine năm sau nhaaa. Hẹn gặp bxa lúc đó, để cùng nhau hâm nóng tình cảm =)))",
   },
-  audioSrc: "", // Đặt nhạc có quyền sử dụng vào assets/audio rồi điền đường dẫn; để trống để vô hiệu hóa.
+  audioSrc: "assets/audio/our-song.mp3", // Đặt nhạc có quyền sử dụng vào assets/audio rồi điền đường dẫn; để trống để vô hiệu hóa.
   bypassCountdown: false, // CHỈ KIỂM THỬ. Không bảo mật; vẫn cần hoàn thành quiz.
   storageKey: "our-little-universe-v1", // Đổi hậu tố để bắt đầu lại trạng thái cho một phiên bản mới.
 };
