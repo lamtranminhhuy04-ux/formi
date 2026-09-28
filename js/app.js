@@ -12,8 +12,30 @@
   };
   function paragraphs(target,items){items.forEach(text=>target.append(app.element("p",text)));}
   function dateLabel(value){try{return new Intl.DateTimeFormat("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:data.timeZone}).format(new Date(value.length===10?`${value}T12:00:00+07:00`:value));}catch{return "Ngày đang được viết tiếp";}}
-  try{const saved=JSON.parse(localStorage.getItem(data.storageKey));if(saved&&typeof saved==="object"){app.state.quizComplete=saved.quizComplete===true;app.state.openedLetters=Array.isArray(saved.openedLetters)?saved.openedLetters.filter(id=>typeof id==="string"&&data.letters.some(letter=>letter.id===id)):[];}}catch{/* Keep the experience usable when storage is blocked or corrupt. */}
-  app.save=()=>{try{localStorage.setItem(data.storageKey,JSON.stringify(app.state));}catch{/* State remains in memory for this visit. */}};
+  function parseState(value){
+    try{
+      const saved=JSON.parse(value);
+      return {quizComplete:saved?.quizComplete===true,openedLetters:Array.isArray(saved?.openedLetters)?[...new Set(saved.openedLetters.filter(id=>typeof id==="string"&&data.letters.some(letter=>letter.id===id)))]:[]};
+    }catch{return {quizComplete:false,openedLetters:[]};}
+  }
+  try{app.state=parseState(localStorage.getItem(data.storageKey));}catch{/* Storage can be blocked. */}
+  function syncLetterIndicators(){
+    document.querySelectorAll("[data-letter-id]").forEach(button=>{
+      const opened=app.state.openedLetters.includes(button.dataset.letterId);
+      button.classList.toggle("opened",opened);
+      button.querySelector("small").textContent=opened?"Đã mở · Đọc lại ↗":"Chạm để mở";
+    });
+  }
+  app.save=()=>{
+    try{
+      // Merge the latest persisted state so a stale tab cannot erase another tab's progress.
+      const latest=parseState(localStorage.getItem(data.storageKey));
+      app.state.quizComplete=app.state.quizComplete||latest.quizComplete;
+      app.state.openedLetters=[...new Set([...latest.openedLetters,...app.state.openedLetters])];
+      localStorage.setItem(data.storageKey,JSON.stringify(app.state));
+    }catch{/* State remains in memory for this visit. */}
+    syncLetterIndicators();
+  };
   document.title=data.siteName;$("hero-title").replaceChildren();
   const titleParts=data.siteName==="Our Little Universe"?["Our Little","Universe"]:[data.siteName,""];
   $("hero-title").append(document.createTextNode(titleParts[0]),app.element("br"),app.element("em",titleParts[1]),app.element("span","✧",{class:"title-star","aria-hidden":"true"}));
@@ -22,6 +44,7 @@
   $("hero-image").src=data.heroImage;$("hero-image").alt=data.heroAlt;$("hero-caption").textContent=data.heroCaption;
   $("hero-image").addEventListener("error",()=>{$("hero-image").src="assets/images/photo-placeholder.svg";},{once:true});
   $("map-image").src=data.mapImage;
+  $("map-image").addEventListener("error",()=>{$("map-image").src="assets/images/map-placeholder.svg";},{once:true});
   paragraphs($("reason-copy"),data.reason);$("signature").textContent=data.signature;
   $("footer-names").textContent=`${data.names.join(" & ")} · ${data.siteName}`;
   $("start-date").textContent=`Kể từ ngày ${dateLabel(data.startDate)}`;
@@ -55,7 +78,7 @@
   });
   data.love.forEach((item,index)=>{const card=app.element("article",null,{class:"love-card reveal"});card.append(app.element("span",String(index+1).padStart(2,"0")),app.element("h3",item.title),app.element("p",item.text));$("love-cards").append(card);});
   data.letters.forEach(letter=>{
-    const button=app.element("button",null,{type:"button",class:"envelope"});
+    const button=app.element("button",null,{type:"button",class:"envelope","data-letter-id":letter.id});
     const status=app.element("small",app.state.openedLetters.includes(letter.id)?"Đã mở · Đọc lại ↗":"Chạm để mở");
     button.append(app.element("span",null,{class:"envelope-flap","aria-hidden":"true"}),app.element("span","♡",{class:"wax","aria-hidden":"true"}),app.element("span",letter.title,{class:"envelope-label"}),status);
     if(app.state.openedLetters.includes(letter.id))button.classList.add("opened");
@@ -70,7 +93,7 @@
     $("final-envelope").classList.add("opened");$("final-envelope").setAttribute("aria-expanded","true");$("final-envelope").querySelector("small").textContent="Đã mở · Lá thư ở ngay bên dưới";
     const show=()=>{
       const letter=$("final-letter");letter.append(app.element("h3",data.finalLetter.title));paragraphs(letter,data.finalLetter.paragraphs);letter.append(app.element("p",data.finalLetter.signature,{class:"signature"}));letter.hidden=false;letter.focus({preventScroll:true});letter.scrollIntoView({behavior:reducedMotion.matches?"instant":"smooth",block:"start"});
-      if(!reducedMotion.matches){for(let i=0;i<18;i++){const confetti=app.element("span",null,{class:"confetti","aria-hidden":"true"});confetti.style.setProperty("--x",`${15+Math.random()*70}%`);confetti.style.setProperty("--c",["#b87a78","#adb59b","#c6a573"][i%3]);document.body.append(confetti);setTimeout(()=>confetti.remove(),2200);}}
+      if(!reducedMotion.matches){for(let i=0;i<18;i++){const confetti=app.element("span",null,{class:"confetti","aria-hidden":"true"});confetti.style.setProperty("--x",`${15+Math.random()*70}%`);confetti.style.setProperty("--c",["var(--color-primary)","var(--color-accent)","var(--color-paper-pink)"][i%3]);document.body.append(confetti);setTimeout(()=>confetti.remove(),2200);}}
     };if(reducedMotion.matches)show();else setTimeout(show,400);
   });
   $("countdown-caption").textContent=data.countdownCaption;
@@ -100,17 +123,31 @@
     if(!app.state.quizComplete||!timeReady)return;
     const content=$("gift-content");content.replaceChildren(app.image(data.gift.image,data.gift.alt),app.element("h3",data.gift.title,{tabindex:"-1"}),app.element("p",data.gift.text),app.element("p",data.gift.invitation));content.hidden=false;$("gift-open").hidden=true;giftShown=true;content.querySelector("h3").focus({preventScroll:true});
   });
-  UniverseGallery.init(app);UniverseQuiz.init(app);tick();setInterval(tick,1000);
-  document.addEventListener("visibilitychange",()=>{if(!document.hidden)tick();});
-  window.addEventListener("storage",event=>{if(event.key===data.storageKey&&event.newValue){try{const state=JSON.parse(event.newValue);if(state.quizComplete===true){app.state.quizComplete=true;app.updateGift();}}catch{/* Ignore malformed values. */}}});
+  UniverseGallery.init(app);UniverseQuiz.init(app);
+  let clockTimer=null;
+  function stopClock(){clearInterval(clockTimer);clockTimer=null;}
+  function startClock(){stopClock();tick();if(!document.hidden)clockTimer=setInterval(tick,1000);}
+  startClock();
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)stopClock();else startClock();});
+  window.addEventListener("pagehide",stopClock);
+  window.addEventListener("pageshow",startClock);
+  window.addEventListener("storage",event=>{
+    if(event.key!==data.storageKey&&event.key!==null)return;
+    const previousComplete=app.state.quizComplete;
+    app.state=parseState(event.newValue);
+    syncLetterIndicators();
+    if(previousComplete!==app.state.quizComplete)app.refreshQuiz?.();
+    app.updateGift();
+  });
   const music=$("music");
   if(data.audioSrc){
     const audio=new Audio();audio.preload="none";audio.loop=true;audio.volume=.35;audio.src=data.audioSrc;
+    let audioFailed=false;
     music.disabled=false;music.querySelector("span").textContent="Bật nhạc";
-    const update=playing=>{music.setAttribute("aria-pressed",String(playing));music.querySelector("span").textContent=playing?"Tắt nhạc":"Bật nhạc";};
-    audio.addEventListener("error",()=>{update(false);music.disabled=true;music.querySelector("span").textContent="Nhạc chưa khả dụng";$("music-status").textContent="Không tải được nhạc. Em vẫn có thể tiếp tục khám phá.";});
+    const update=playing=>{music.setAttribute("aria-pressed",String(playing&&!audioFailed));music.querySelector("span").textContent=audioFailed?"Nhạc chưa khả dụng":playing?"Tắt nhạc":"Bật nhạc";};
+    audio.addEventListener("error",()=>{audioFailed=true;update(false);music.disabled=true;$("music-status").textContent="Không tải được nhạc. Em vẫn có thể tiếp tục khám phá.";});
     audio.addEventListener("pause",()=>update(false));audio.addEventListener("play",()=>update(true));
-    music.addEventListener("click",async()=>{if(audio.paused){try{await audio.play();}catch{update(false);$("music-status").textContent="Chưa phát được nhạc. Hãy thử lại hoặc kiểm tra tệp âm thanh.";}}else audio.pause();});
+    music.addEventListener("click",async()=>{if(audio.paused){try{await audio.play();}catch{update(false);if(!audioFailed)$("music-status").textContent="Chưa phát được nhạc. Hãy thử lại hoặc kiểm tra tệp âm thanh.";}}else audio.pause();});
   }else music.title="Thêm đường dẫn audioSrc trong js/data.js để bật nhạc nền.";
   $("start").addEventListener("click",()=>{$("together").setAttribute("tabindex","-1");$("together").focus({preventScroll:true});});
   if("IntersectionObserver" in window&&!reducedMotion.matches){

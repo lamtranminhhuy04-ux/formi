@@ -1,6 +1,6 @@
 # Our Little Universe
 
-Một cuốn scrapbook tình yêu bằng **HTML, CSS và JavaScript thuần**, chạy ngay khi mở `index.html`. Không framework, npm, bundler, backend, database, API key hay dịch vụ trả phí. Tất cả ảnh mẫu đều là SVG cục bộ; không cần mạng để tải font hoặc ảnh.
+Một cuốn scrapbook tình yêu bằng **HTML, CSS và JavaScript thuần**, chạy ngay khi mở `index.html`. Không framework, npm, bundler, backend, database, API key hay dịch vụ trả phí. Ảnh SVG và font WOFF2 đều được lưu cục bộ; không cần mạng để tải font hoặc ảnh. Theme hiện tại là **pink pastel romantic scrapbook**.
 
 ## Chạy website
 
@@ -20,6 +20,7 @@ Mở `http://localhost:8000`. Python chỉ là công cụ xem thử tùy chọn,
 | --- | --- |
 | `index.html` | 12 phần theo thứ tự hành trình, điều hướng và dialog |
 | `css/reset.css` | Thiết lập CSS cơ bản |
+| `css/fonts.css` | Font WOFF2 cục bộ, weight/style và `font-display: swap` |
 | `css/styles.css` | Màu, bố cục, responsive, chuyển động, focus |
 | `js/data.js` | **Tất cả nội dung cá nhân cần thay** |
 | `js/app.js` | Render, bản đồ, thư, âm thanh, trạng thái quà |
@@ -28,9 +29,12 @@ Mở `http://localhost:8000`. Python chỉ là công cụ xem thử tùy chọn,
 | `js/gallery.js` | Album, lightbox, phím mũi tên |
 | `assets/images/` | Hero, bản đồ, 5 cảnh minh họa, ảnh dự phòng và texture giấy |
 | `assets/icons/star.svg` | Favicon |
+| `assets/fonts/` | Noto Sans, Universe Serif (bản subset của Lora), giấy phép và nguồn |
 | `assets/audio/README.md` | Cách thêm nhạc thật |
 | `.nojekyll` | Phục vụ website tĩnh trên GitHub Pages |
 | `tests/browser_check.py` | Kiểm tra trình duyệt tùy chọn cho người bảo trì |
+| `tests/theme_check.py` | Kiểm tra bổ sung font/theme/contrast/network/responsive và regression |
+| `tests/font_probe.py` | Kiểm tra font thực tế qua Chromium CDP, chụp bảng dấu tiếng Việt |
 
 Hành trình: chào → số ngày bên nhau → lời mở đầu → 6 cột mốc → bản đồ → 6 ảnh Polaroid → 5 điều yêu → 5 câu quiz → 4 thư “Open when” → thư cuối → countdown → quà.
 
@@ -89,7 +93,7 @@ Sao chép một đối tượng có sẵn trong `timeline` hoặc `places` để
 
 Mỗi câu nên có 3–4 lựa chọn. `correct: 0` chỉ đáp án đầu tiên, `1` là đáp án thứ hai. Thay `yes` và `no` tương ứng; đáp sai vẫn được đi tiếp. Hoàn thành tất cả câu sẽ nhận chìa khóa, không yêu cầu điểm tối thiểu. Chơi lại không thu hồi chìa khóa đã có.
 
-Chỉ lưu `quizComplete` và danh sách ID thư đã mở trong `localStorage`, không lưu câu trả lời hay dữ liệu nhạy cảm. Nếu storage bị chặn/hỏng, trang vẫn hoạt động bằng bộ nhớ phiên hiện tại; tiến độ có thể mất khi tải lại. Muốn bắt đầu một món quà mới, đổi `storageKey` từ `our-little-universe-v1` sang `our-little-universe-v2`.
+Chỉ lưu `quizComplete` và danh sách ID thư đã mở trong `localStorage`, không lưu câu trả lời hay dữ liệu nhạy cảm. Các tab cùng origin đồng bộ tiến độ; khi lưu, trang hợp nhất trạng thái để không ghi đè thư đã mở ở tab khác. Nếu storage bị chặn/hỏng, trang vẫn hoạt động bằng bộ nhớ phiên hiện tại; tiến độ có thể mất khi tải lại. Muốn bắt đầu một món quà mới, đổi `storageKey` từ `our-little-universe-v1` sang `our-little-universe-v2`.
 
 ### Nhạc
 
@@ -121,7 +125,37 @@ Không cần thêm bước npm/build hoặc đổi tên repository trong mã. To
 
 Tham khảo: [GitHub — Configuring a publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
+## Font tiếng Việt và theme pastel
+
+Font cũ Georgia trên máy kiểm thử thiếu nhiều ký tự Việt, khiến trình duyệt xen Times New Roman vào các tiêu đề/chữ nghiêng. Encoding của mã nguồn vẫn đúng UTF-8. Bản mới dùng:
+
+- **Noto Sans** cho nội dung và nút, variable weight 400–700 (bao gồm 600, 650, 700).
+- **Universe Serif** cho tiêu đề và điểm nhấn, là bản subset của **Lora** với normal 400 và italic 400 thật. Đã đổi tên nội bộ vì Lora có Reserved Font Name trong giấy phép OFL.
+- Fallback nội dung: `"Segoe UI", Arial, sans-serif`. Fallback tiêu đề: `"Times New Roman", "Noto Sans", serif`. Không còn Georgia trong stack.
+
+Ba file WOFF2 tổng cộng **141.468 byte (~138 KiB)**, có đủ ký tự tiếng Việt viết hoa/thường và dấu tổ hợp NFC/NFD. Font có `font-display: swap`; preload hai font normal cần cho màn hình đầu. Không có Google Fonts/CDN request khi chạy website. Giữ kèm các file giấy phép trong `assets/fonts/` khi deploy.
+
+Đổi font tại `css/fonts.css`, sau đó cập nhật `--font-body` và `--font-heading` trong `css/styles.css`. Khi đổi font mới, kiểm tra lại glyph, weight/style, chiều cao dòng và xuống dòng; không chỉ kiểm tra tên font trong computed CSS. Công cụ `font_probe.py` kiểm tra cả font được render thực tế.
+
+Toàn bộ màu UI tập trung ở `:root` của `css/styles.css`:
+
+| Biến | Màu mặc định |
+| --- | --- |
+| `--color-background` | `#FFF7FA` |
+| `--color-section` | `#FCEEF3` |
+| `--color-surface` | `#FFFDFC` |
+| `--color-primary` | `#E8A8B8` |
+| `--color-accent` | `#D97993` |
+| `--color-primary-dark` / `--color-focus` | `#9D4E67` |
+| `--color-text` | `#4A3038` |
+| `--color-text-muted` | `#76545F` |
+| `--color-border` | `#EBCDD6` |
+
+Phong bì, băng dính, trạng thái và shadow có token riêng. Chữ trên nền pastel dùng màu đậm để giữ độ tương phản; hồng nhạt chủ yếu dành cho nền/trang trí. Các ảnh SVG chứa bảng màu riêng và đã được phối lại theo theme. **Màu da, tóc, cây cỏ, bánh và một số vật thể trong cảnh minh họa được giữ có chủ đích**; chúng không phải nền UI nâu/olive. Ảnh cá nhân thêm sau này không bị áp bộ lọc màu.
+
 ## Kiểm tra và khả năng truy cập
+
+Đợt rà soát font/theme: bộ cũ **59/59**, bộ bổ sung **196/196**; đã kiểm tra thêm màn hình ngang 812×375, font thực tế, contrast, network và lỗi nhiều tab. Xem [QA-REPORT.md](QA-REPORT.md) để biết nguyên nhân gốc, bằng chứng, giới hạn kiểm thử và [ảnh desktop/mobile](docs/qa/).
 
 Đã kiểm tra trên Edge Chromium headless: 320, 375, 768, 1024, 1440px không tràn ngang; mở qua đường dẫn con và trực tiếp `file://`; tài nguyên cục bộ; timeline; cả bốn ghim; lightbox mũi tên/trước/sau; Escape/nhấn nền đóng dialog; Tab giữ focus và trả focus về nút nguồn; quiz đúng/sai/chơi lại/lưu trạng thái; thư ngắn lưu trạng thái; thư cuối; countdown tương lai/đã qua/không hợp lệ; quà với cả hai điều kiện; storage hỏng/bị chặn; giảm chuyển động và dọn confetti. Bộ kiểm tra ghi kết quả và ảnh chụp vào `tests/artifacts/` (được Git bỏ qua).
 
@@ -132,9 +166,19 @@ python -m pip install playwright
 python tests/browser_check.py
 ```
 
+Kiểm tra mở rộng (cũng chỉ là công cụ cho người bảo trì):
+
+```sh
+python -m pip install "fonttools[woff]" html5lib tinycss2
+python tests/font_probe.py after
+python tests/theme_check.py
+```
+
+Kiểm thử chạy trong browser context riêng, chỉ xóa localStorage của context thử nghiệm, không xóa dữ liệu của trình duyệt cá nhân. Tệp nhạc thử được sinh trong bộ nhớ và gắn vào response của test; `js/data.js` trên đĩa không bị sửa. Bộ kiểm tra bổ sung phân biệt network lỗi mô phỏng với network bình thường.
+
 Playwright chỉ phục vụ kiểm thử, không được tải vào website. Với hệ điều hành khác, có thể đổi `channel='msedge'` trong script sang trình duyệt đã cài phù hợp. JavaScript có thể kiểm tra cú pháp bằng `node --check js/app.js` và tương tự cho bốn tệp còn lại; Node không cần để chạy website.
 
-Giao diện có semantic headings, nút thật, nhãn cho các điều khiển, alt ảnh, focus rõ, skip link, dialog native, vùng bấm ít nhất 44px cho điều khiển chính và `prefers-reduced-motion`. Font hệ thống có fallback, không dùng font bên ngoài. Đồng hồ không đọc lại mỗi giây qua screen reader.
+Giao diện có semantic headings, nút thật, nhãn cho các điều khiển, alt ảnh, focus rõ, skip link, dialog native, vùng bấm ít nhất 44px cho điều khiển chính và `prefers-reduced-motion`. Font cục bộ có fallback hệ thống. Đồng hồ không đọc lại mỗi giây qua screen reader, tạm dừng timer khi tab bị ẩn và cập nhật ngay khi quay lại.
 
 Chưa kiểm chứng trên thiết bị iOS/Android thật hoặc screen reader; nên thử thêm Safari/iPhone và VoiceOver/TalkBack trước khi gửi. Chưa xuất bản lên GitHub hoặc thử nhạc cá nhân vì chưa có repository đích và tệp nhạc thật.
 

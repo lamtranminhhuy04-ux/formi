@@ -28,6 +28,7 @@ window.UniverseQuiz = {
           button.classList.add("selected");button.textContent=`${correct?"✓":"♡"} ${option}`;
           if(options.children[q.correct])options.children[q.correct].classList.add("correct");
           feedback.textContent=correct?q.yes:q.no;next.hidden=false;next.focus({preventScroll:true});
+          card.querySelector("progress").value=index+1;
         });options.append(button);
       });
       next.addEventListener("click",()=>{
@@ -38,6 +39,7 @@ window.UniverseQuiz = {
       card.append(meta,app.element("progress",null,{max:questions.length,value:index,"aria-label":"Tiến trình quiz"}),title,options,feedback,next);
       if(focus)title.focus({preventScroll:true});
     }
+    app.refreshQuiz=()=>{if(!questions.length)return;if(app.state.quizComplete)result();else{index=0;score=0;render();}};
     if(!questions.length){card.append(app.element("p","Chưa có câu hỏi. Hãy thêm câu hỏi trong js/data.js."));return;}
     if(app.state.quizComplete)result();else render();
   }

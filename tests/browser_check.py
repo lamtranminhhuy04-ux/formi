@@ -34,6 +34,7 @@ with sync_playwright() as p:
     page.on('console', lambda message: errors.append(message.text) if message.type == 'error' else None)
     page.goto(URL)
     page.wait_for_selector('.timeline-item')
+    page.evaluate('document.fonts.ready')
     check(page.locator('.timeline-item').count() == 6, 'Six timeline events from data')
     check(page.locator('#music').is_disabled(), 'Music clearly disabled without source')
     for width in [320, 375, 768, 1024, 1440]:

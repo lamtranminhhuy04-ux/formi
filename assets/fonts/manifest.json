@@ -1,0 +1,36 @@
+[
+  {
+    "file": "universe-serif-regular.woff2",
+    "bytes": 28208,
+    "source_file": "lora-Lora[wght].ttf",
+    "source_sha256": "822a6621ccbe8d97d20ac88c1c41f5615c9c2c202eaa75f272cd452aac6475a7",
+    "woff2_sha256": "e4664119f7139c7d715578ae1a624a729769ce7adacd3657e9bfa96dca4a6a97",
+    "axes": {
+      "wght": 400
+    }
+  },
+  {
+    "file": "universe-serif-italic.woff2",
+    "bytes": 30292,
+    "source_file": "lora-Lora-Italic[wght].ttf",
+    "source_sha256": "22d8d8854b53807aa664ca34f2031a9ed57a1d0dea296b8b96cdd3aad937a2b3",
+    "woff2_sha256": "44424fefad04a340593bb4c7f4fd139106bbdb6f3d7b425f3b50fca1b5c84802",
+    "axes": {
+      "wght": 400
+    }
+  },
+  {
+    "file": "noto-sans-latin-vietnamese.woff2",
+    "bytes": 82968,
+    "source_file": "notosans-NotoSans[wdth,wght].ttf",
+    "source_sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d",
+    "woff2_sha256": "cb44b0258c16c718a138ffa1be6f52ad5e9238c2988d63c85e749dbcfa0536d2",
+    "axes": {
+      "wdth": 100,
+      "wght": [
+        400,
+        700
+      ]
+    }
+  }
+]
